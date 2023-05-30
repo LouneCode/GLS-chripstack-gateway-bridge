@@ -53,7 +53,7 @@ Replace following components on [ChirpStack](https://www.chirpstack.io/) v4 LoRa
 
 $ git clone https://github.com/LouneCode/GLS-chripstack-gateway-bridge.git GLS-chripstack-gateway-bridge 
 $ cd GLS-chripstack-gateway-bridge
-$ sudo docker build --build-arg REMOTE_TAG=v4.0.5 . -t gls-chirpstack-gateway-bridge:4.0.5.1
+$ sudo docker build --build-arg REMOTE_TAG=v4.0.8 . -t gls-chirpstack-gateway-bridge:4.0.8.1
 $ docker images
 
 ```
@@ -107,8 +107,8 @@ services:
       - 8080:8080
 
   chirpstack-gateway-bridge-eu868-ws:
-# image: chirpstack/chirpstack-gateway-bridge:4.0.5
-    image: gls-chirpstack-gateway-bridge:4.0.5.1
+# image: chirpstack/chirpstack-gateway-bridge:4.0.8
+    image: gls-chirpstack-gateway-bridge:4.0.8.1
     restart: unless-stopped
     ports:
       - 3001:3001

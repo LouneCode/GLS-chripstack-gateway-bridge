@@ -3,7 +3,7 @@
 set -e
 cd $(dirname $0)
 
-REMOTE_TAG=${REMOTE_TAG:-"v4.0.5"}
+REMOTE_TAG=${REMOTE_TAG:-"v4.0.8"}
 
 # Clone 
 if [[ ! -d chirpstack-gateway-bridge ]]; then
