@@ -1,0 +1,36 @@
+diff --git a/internal/backend/basicstation/structs/radio_meta_data.go b/internal/backend/basicstation/structs/radio_meta_data.go
+index cb9d680..ec491e3 100644
+--- a/internal/backend/basicstation/structs/radio_meta_data.go
++++ b/internal/backend/basicstation/structs/radio_meta_data.go
+@@ -27,6 +27,7 @@ type RadioMetaDataUpInfo struct {
+ 	RCtx    uint64  `json:"rctx"`
+ 	XTime   uint64  `json:"xtime"`
+ 	GPSTime int64   `json:"gpstime"`
++	Fts     *int64  `json:"fts,omitempty"`
+ 	RSSI    float32 `json:"rssi"`
+ 	SNR     float32 `json:"snr"`
+ }
+@@ -92,6 +93,23 @@ func SetRadioMetaDataToProto(loraBand band.Band, gatewayID lorawan.EUI64, rmd Ra
+ 		pb.RxInfo.Time = timestamppb.New(gpsTimeTime)
+ 	}
+ 
++	if fts := rmd.UpInfo.Fts; fts != nil {
++		if *fts > -1 {
++
++			ftsTimeDur := time.Duration(*fts) * time.Nanosecond
++
++			if gpsTime := rmd.UpInfo.GPSTime; gpsTime != 0 {
++				gpsTimeDur := time.Duration(gpsTime) * time.Microsecond
++				// take the seconds from the gps time
++				gpsTimeDur = gpsTimeDur - (gpsTimeDur % time.Second)
++				// add the nanos from the fine-timestamp
++				ftsTimeDur = gpsTimeDur + ftsTimeDur
++			}
++
++			pb.RxInfo.FineTimeSinceGpsEpoch = durationpb.New(ftsTimeDur)
++		}
++	}
++
+ 	// Context
+ 	pb.RxInfo.Context = make([]byte, 16)
+ 	binary.BigEndian.PutUint64(pb.RxInfo.Context[0:8], uint64(rmd.UpInfo.RCtx))
